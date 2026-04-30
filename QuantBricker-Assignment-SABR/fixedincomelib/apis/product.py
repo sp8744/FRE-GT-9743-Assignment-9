@@ -317,7 +317,19 @@ def qfCreateProductRFRCapFloor(
     business_day_convention: Optional[str] = "MF",
     holiday_convention: Optional[str] = "USGS",
 ):
-
-    # TODO:
-    # return ProductRFRCapFloor product
-    pass
+    return ProductRFRCapFloor(
+        effective_date=Date(effective_date),
+        term_or_termination_date=TermOrTerminationDate(term_or_termination_date),
+        on_index=on_index,
+        strike=strike,
+        cap_or_floor=CapOrFloor.from_string(cap_or_floor),
+        notional=notional,
+        accrual_period=Period(accrual_period),
+        accrual_basis=AccrualBasis(accrual_basis),
+        payment_offset=Period(payment_offset),
+        payment_business_day_convention=BusinessDayConvention(payment_business_day_convention),
+        payment_holiday_convention=HolidayConvention(payment_holiday_convention),
+        long_or_short=LongOrShort.from_string(long_or_short),
+        business_day_convention=BusinessDayConvention(business_day_convention),
+        holiday_convention=HolidayConvention(holiday_convention),
+    )

@@ -184,14 +184,18 @@ class ProductDisplayVisitor(ProductVisitor):
     @visit.register
     def _(self, product: ProductRFRCapFloor):
         self._common_items(product)
-        # TODO:
-        # Append the main name-value pairs for ProductRFRCapFloor.
-        #
-        # Hint:
-        # - Include key dates and contract terms
-        # - You may reuse existing product properties directly
-        # - The number of caplets can be obtained from the product itself
-
-        # self.nvps_.append([...])
-        # self.nvps_.append([...])
-        # ...
+        self.nvps_.append(["Effective Date", product.effective_date.ISO()])
+        self.nvps_.append(["Termination Date", product.termination_date.ISO()])
+        self.nvps_.append(["ON Index", product.on_index.name()])
+        self.nvps_.append(["Strike", product.strike])
+        self.nvps_.append(["Cap Or Floor", product.cap_or_floor.to_string().upper()])
+        self.nvps_.append(["Accrual Period", str(product.accrual_period)])
+        self.nvps_.append(["Accrual Basis", product.accrual_basis.value_str])
+        self.nvps_.append(["Payment Offset", str(product.payment_offset)])
+        self.nvps_.append(
+            ["Payment Business Day Convention", product.payment_business_day_convention.value_str]
+        )
+        self.nvps_.append(
+            ["Payment Holiday Convention", product.payment_holiday_convention.value_str]
+        )
+        self.nvps_.append(["Num Caplets", product.num_caplets()])

@@ -385,8 +385,17 @@ class SABRModelComponent(ModelComponent):
         - You need to evaluate each interpolator at the given (expiry, tenor)
         - The output should be a dictionary mapping SABRParameters -> float
         """
-        # TODO: implement
-        pass
+        result = {}
+        all_parameters = [
+            SABRParameters.NV, 
+            SABRParameters.BETA, 
+            SABRParameters.NU, 
+            SABRParameters.RHO]
+
+        for param in all_parameters:
+            value = self.interpolator_[param].interpolate(expiry, tenor)
+            result[param] = float(value)
+        return result
     
     def get_sabr_parameter_gradient_wrt_state(
         self,
@@ -406,8 +415,26 @@ class SABRModelComponent(ModelComponent):
         - Concatenate all parameter gradients into one vector
         - If accumulate=True, add to gradient_vector; otherwise overwrite it
         """
-        # TODO: implement
-        pass
+        all_parameters = [
+            SABRParameters.NV, 
+            SABRParameters.BETA, 
+            SABRParameters.NU, 
+            SABRParameters.RHO]
+
+        offset = 0
+
+        for k,param in enumerate(all_parameters):
+            surface = self.state_data[param]
+            size = surface.size
+
+            grad_param = self.interpolator_[param].gradient_wrt_ordinate(expiry,tenor)
+            scaled = scalers[k]*grad_param
+            if accumulate:
+                gradient_vector[offset:offset+size] += scaled
+            else :
+                gradient_vector[offset:offset+size] = scaled
+            
+            offset += size
             
             
 

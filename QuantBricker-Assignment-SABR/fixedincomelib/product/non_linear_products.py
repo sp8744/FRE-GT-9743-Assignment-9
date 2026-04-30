@@ -276,11 +276,20 @@ class ProductRFRCapFloor(Product):
             payment_holiday_convention=self.payment_holiday_convention_,
         )
         self.caplets_ = []
-        # TODO:
-        # Build one ProductRFRCapletFloorlet for each accrual period in the schedule,
-        # and append it to self.caplets_.
         for _, row in schedule.iterrows():
-            pass
+            caplet = ProductRFRCapletFloorlet(
+                effective_date=Date(row["StartDate"]),
+                expiry_offset=Period("0D"),
+                term_or_termination_date=TermOrTerminationDate(Date(row["EndDate"]).ISO()),
+                payment_date=Date(row["PaymentDate"]),
+                on_index=self.on_index_str_,
+                strike=self.strike_,
+                notional=self.notional_,
+                cap_or_floor=self.cap_or_floor_,
+                accrual_basis=self.accrual_basis_,
+                long_or_short=self.long_or_short_,
+            )
+            self.caplets_.append(caplet)
         
         if len(self.caplets_) > 0:
             self.last_date_ = self.caplets_[-1].payment_date
